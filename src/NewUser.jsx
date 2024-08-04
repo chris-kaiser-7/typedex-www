@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  padding: 20px;
   max-width: 400px;
   margin: 0 auto;
-  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ccc;
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
 `;
 
 const Title = styled.h2`
@@ -26,13 +28,17 @@ const FormGroup = styled.div`
 
 const Label = styled.label`
   margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
 `;
 
 const Input = styled.input`
-  padding: 10px;
-  font-size: 16px;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
 `;
 
 const Button = styled.button`
