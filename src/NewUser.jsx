@@ -1,5 +1,59 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  padding: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+`;
+
+const Title = styled.h2`
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 15px;
+`;
+
+const Label = styled.label`
+  margin-bottom: 5px;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+`;
+
+const Button = styled.button`
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const Message = styled.p`
+  text-align: center;
+  margin-top: 20px;
+  color: green;
+`;
 
 const NewUserForm = ({ navigateTo }) => {
   const [username, setUsername] = useState('');
@@ -43,40 +97,40 @@ const NewUserForm = ({ navigateTo }) => {
   };
 
   return (
-    <div>
-      <h2>Create New User</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input 
+    <Container>
+      <Title>Create New User</Title>
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label>Username:</Label>
+          <Input 
             type="text" 
             value={username} 
             onChange={(e) => setUsername(e.target.value)} 
             required 
           />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input 
+        </FormGroup>
+        <FormGroup>
+          <Label>Email:</Label>
+          <Input 
             type="email" 
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
             required 
           />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input 
+        </FormGroup>
+        <FormGroup>
+          <Label>Password:</Label>
+          <Input 
             type="password" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
             required 
           />
-        </div>
-        <button type="submit">Create User</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+        </FormGroup>
+        <Button type="submit">Create User</Button>
+      </Form>
+      {message && <Message>{message}</Message>}
+    </Container>
   );
 };
 
