@@ -113,7 +113,7 @@ function Tree() {
       </select>
       <canvas ref={canvasRef} width="1000" height="800" style={{ position: 'absolute', top: 0, left: 0 }} />
       {selectedRoot && (
-        <Node node={nodes.find(node => node.type === selectedRoot)} nodes={nodes} level={0} x={50} y={50} canvas={canvasRef.current} generateChildren={generateChildren} expandedNodes={expandedNodes} onExpand={handleExpand} onCollapse={handleCollapse} />
+        <Node node={nodes.find(node => node.type === selectedRoot)} nodes={nodes} level={0} x={50} y={90} canvas={canvasRef.current} generateChildren={generateChildren} expandedNodes={expandedNodes} onExpand={handleExpand} onCollapse={handleCollapse} />
       )}
     </div>
   );

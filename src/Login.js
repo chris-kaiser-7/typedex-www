@@ -94,7 +94,8 @@ const Login = () => {
       params.append('password', password);
       const response = await axios.post('http://127.0.0.1:8000/api/v1/token', params);
       localStorage.setItem('token', response.data.access_token);
-      navigate('/tree'); // Redirect to dashboard or another protected route
+      localStorage.setItem('username', username)
+      navigate('/'); // Redirect to dashboard or another protected route
     } catch (err) {
       setError('Invalid username or password');
     }
