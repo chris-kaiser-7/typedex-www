@@ -28,8 +28,6 @@ export const apiAuth = {
     return await jsonify(res);
   },
   async loginWithOauth(username, password) {
-    console.log(apiCore.url)
-    console.log("test")
     const params = new URLSearchParams();
     params.append("username", username);
     params.append("password", password);

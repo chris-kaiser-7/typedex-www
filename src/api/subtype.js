@@ -1,22 +1,49 @@
 // api.js
 import axios from 'axios';
+import { apiCore } from "./core";
 
-const BASE_URL = 'http://127.0.0.1:8000/api/v1';
+const jsonify = async (response) => {
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw {
+      message: `Request failed with ${response.status}: ${response.statusText}`,
+      code: response.status,
+    };
+  }
+};
 
 // Function to generate children nodes
 export const generateChildrenNodes = () => {
-  return axios.get(`${BASE_URL}/subtype/`);
+  return axios.get(`${apiCore.url}/subtype/`);
 };
 
 // Function to generate a specific type of node
-export const generateNodeType = (type, count) => {
-  return axios.post(`${BASE_URL}/type`, {
-    type,
-    count,
-  });
-};
+export const apiSubtype = {
+  async generateNodeType(token, data){
+    const res = await fetch(`${apiCore.url}/subtype/generate`, {
+      method: "POST",
+      headers: apiCore.headers(token),
+      body: JSON.stringify(data)
+    });
+    return await jsonify(res);
+  },
+}
+// export const async generateNodeType = (type, count) => {
+//   return axios.post(`${apiCore.url}/subtype/generate`, {
+//     type,
+//     count,
+//   });
+// };
 
 // Function to get all nodes
 export const getAllNodes = () => {
-  return axios.get(`${BASE_URL}/subtype/`);
+  return axios.get(`${apiCore.url}/subtype/`);
 };
+  // async requestNewTOTP(token) {
+  //   const res = await fetch(`${apiCore.url}/users/new-totp`, {
+  //     method: "POST",
+  //     headers: apiCore.headers(token),
+  //   });
+  //   return await jsonify(res);
+  // },

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Header from './Header';
-// import Sidebar from './Sidebar';
-// import Footer from './Footer';
 import { Outlet } from 'react-router-dom';
 
 const DashboardContainer = styled.div`
@@ -41,12 +39,10 @@ const Dashboard = ({homeurl}) => {
     <DashboardContainer>
       <Header isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} homeurl={homeurl}/>
       <ContentContainer>
-        {/* <Sidebar /> */}
         <div style={{ flexGrow: 1, padding: '20px', backgroundColor: '#fafafa' }}>
           <Outlet />
         </div>
       </ContentContainer>
-      {/* <Footer /> */}
     </DashboardContainer>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
+import { generateChildrenNodes, apiSubtype, getAllNodes } from '../api/subtype';
 
 const NodeContainer = styled.div`
   position: absolute;
@@ -69,7 +69,7 @@ const ModalContent = styled.div`
   background: white;
   padding: 20px;
   border-radius: 8px;
-  width: 400px;
+  width: 800px;
 
   h3 {
     font-size: 1.2em;
@@ -105,6 +105,98 @@ const ModalContent = styled.div`
   }
 `;
 
+// const Label = styled.label`
+//   font-weight: bold;
+//   margin-bottom: 5px;
+//   display: block;
+// `;
+
+// const Value = styled.p`
+//   margin: 0 0 10px 0;
+//   padding: 5px 0;
+//   border-bottom: 1px solid #ddd;
+// `;
+
+//side by side
+// const Label = styled.label`
+//   font-weight: bold;
+//   margin-right: 10px;
+//   display: inline-block;
+//   width: 30%;
+// `;
+
+// const Value = styled.p`
+//   display: inline-block;
+//   width: 65%;
+//   margin: 0;
+//   padding: 5px;
+//   background-color: #f9f9f9;
+//   border-radius: 5px;
+// `;
+
+//blue description highlight
+// const Label = styled.label`
+//   font-weight: bold;
+//   margin-bottom: 3px;
+//   display: block;
+// `;
+
+// const Value = styled.p`
+//   margin: 0 0 15px 0;
+//   padding: 10px;
+//   background-color: #eef;
+//   border-left: 3px solid #007BFF;
+//   border-radius: 3px;
+// `;
+
+//vertical split
+// const Label = styled.label`
+//   font-weight: bold;
+//   display: block;
+//   margin-bottom: 5px;
+// `;
+
+// const Value = styled.p`
+//   margin: 0;
+//   padding: 10px 0;
+//   border-top: 1px solid #ccc;
+//   color: #555;
+// `;
+
+//boxed 
+const Label = styled.label`
+  font-weight: bold;
+  display: block;
+  padding: 5px;
+  background-color: #007BFF;
+  color: white;
+  border-radius: 5px 5px 0 0;
+`;
+
+const Value = styled.p`
+  margin: 0;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 0 0 5px 5px;
+  border: 1px solid #007BFF;
+  border-top: none;
+`;
+
+//min with underline
+// const Label = styled.label` 
+//   font-weight: bold;
+//   margin-bottom: 2px;
+//   display: block;
+//   text-transform: uppercase;
+// `;
+
+// const Value = styled.p`
+//   margin: 0;
+//   padding: 0 0 5px 0;
+//   border-bottom: 2px solid #333;
+//   font-style: italic;
+// `;
+
 const FlexContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -121,7 +213,16 @@ const TreeContainer = styled.div`
 `;
 
 const StyledSelect = styled.select`
-  margin-bottom: 20px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: none;
+  font-size: 16px;
+  background-color: #f0f0f0;
+  color: #333;
+  &:focus {
+    background-color: #e0e0e0;
+    outline: none;
+  }
 `;
 
 const StyledCanvas = styled.canvas`
@@ -131,22 +232,19 @@ const StyledCanvas = styled.canvas`
 `;
 
 function Node({ node, nodes, parentId, level, x, y, canvas, generateChildren, expandedNodes, onExpand, onCollapse, onNodeClick }) {
-  const childNodes = nodes.filter((n) => node.children.includes(n.type));
-  const collapsed = !expandedNodes[node.type];
+  const childNodes = nodes.filter((n) => node.children.includes(n.name));
+  const collapsed = !expandedNodes[node.name];
   const [generating, setGenerating] = useState(false);
 
   const handleGenerate = (event) => {
     event.stopPropagation(); // Prevent event propagation to NodeContent
     setGenerating(true);
     const count = Math.floor(Math.random() * 4) + 3;
-    axios
-      .post('http://127.0.0.1:8000/api/v1/type', {
-        type: node.type,
-        count: count,
-      })
+    const gen_data = {parent: node.name, book: node.book, count }
+    apiSubtype.generateNodeType(localStorage.getItem("token"), gen_data)
       .then((response) => {
         generateChildren();
-        onExpand(node.type, level);
+        onExpand(node.name, level);
         setGenerating(false);
       })
       .catch((error) => console.error(error));
@@ -154,20 +252,20 @@ function Node({ node, nodes, parentId, level, x, y, canvas, generateChildren, ex
 
   const handleExpand = (event) => {
     event.stopPropagation(); // Prevent event propagation to NodeContent
-    onExpand(node.type, level);
+    onExpand(node.name, level);
   };
 
   const handleCollapse = (event) => {
     event.stopPropagation(); // Prevent event propagation to NodeContent
-    onCollapse(node.type);
+    onCollapse(node.name);
   };
 
   return (
     <React.Fragment>
       <NodeContainer x={x} y={y}>
         <NodeContent onClick={() => onNodeClick(node)}>
-          <h3>{node.type}</h3>
-          <p>{node.general_description}</p>
+          <h3>{node.name}</h3>
+          <p>{node.properties.general_description}</p>
           {collapsed && childNodes.length > 0 && (
             <button onClick={handleExpand}>Expand</button>
           )}
@@ -186,10 +284,10 @@ function Node({ node, nodes, parentId, level, x, y, canvas, generateChildren, ex
         <FlexContainer>
           {childNodes.map((child, index) => (
             <Node
-              key={child.type}
+              key={child.name}
               node={child}
               nodes={nodes}
-              parentId={node.type}
+              parentId={node.name}
               level={level + 1}
               x={50 + index * 250}
               y={y + 300}
@@ -217,19 +315,18 @@ function Tree() {
   const [selectedNode, setSelectedNode] = useState(null);
   const canvasRef = useRef(null);
 
+
   useEffect(() => {
-    axios
-      .get('http://127.0.0.1:8000/api/v1/subtype/')
+    getAllNodes()
       .then((response) => {
         setNodes(response.data);
-        setRootNodes(response.data.filter((node) => !response.data.some((n) => n.children.includes(node.name))));
+        setRootNodes(response.data.filter(node => node.parent == null));
       })
       .catch((error) => console.error(error));
   }, []);
 
   const generateChildren = () => {
-    axios
-      .get('http://127.0.0.1:8000/api/v1/subtype/')
+    generateChildrenNodes()
       .then((response) => {
         setNodes(response.data);
       })
@@ -247,8 +344,6 @@ function Tree() {
     newExpandedNodes[nodeType] = true;
 
     setExpandedNodes(newExpandedNodes);
-    console.log(nodeLevels);
-    console.log(newExpandedNodes);
   };
 
   const handleCollapse = (nodeType) => {
@@ -275,7 +370,7 @@ function Tree() {
           </option>
         ))}
       </StyledSelect>
-      <StyledCanvas ref={canvasRef} width="1000" height="800" />
+      <StyledCanvas ref={canvasRef} width="10" height="10" />
       {selectedRoot && (
         <Node
           node={nodes.find((node) => node.name === selectedRoot)}
@@ -294,14 +389,18 @@ function Tree() {
       {showModal && selectedNode && (
         <ModalOverlay onClick={closeModal}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
-            <h3>{selectedNode.name} Details</h3>
-            <p>{selectedNode.general_description}</p>
-            <input type="text" placeholder="Additional Field 1" />
-            <input type="text" placeholder="Additional Field 2" />
+            <h3>{selectedNode.name} Properties</h3>
+            {Object.keys(selectedNode.properties).map((key) => (
+              <div key={key}>
+                <Label htmlFor={key}>{key}</Label>
+                <Value id={key}>{selectedNode.properties[key]}</Value>
+              </div>
+            ))}
             <button onClick={closeModal}>Close</button>
           </ModalContent>
         </ModalOverlay>
       )}
+
     </TreeContainer>
   );
 }
