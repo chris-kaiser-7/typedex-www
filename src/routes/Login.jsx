@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { apiAuth } from '../api/auth';
 
 // Styled Components
 const Container = styled.div`
@@ -89,15 +90,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const params = new URLSearchParams();
-      params.append('username', username);
-      params.append('password', password);
-      const response = await axios.post('http://127.0.0.1:8000/api/v1/token', params);
-      localStorage.setItem('token', response.data.access_token);
+      const response = await apiAuth.loginWithOauth(username, password)
+      console.log(response)
+      localStorage.setItem('token', response.access_token);
       localStorage.setItem('username', username)
       navigate('/'); // Redirect to dashboard or another protected route
     } catch (err) {
-      setError('Invalid username or password');
+      setError('Invalid username or password'); //?
     }
   };
 

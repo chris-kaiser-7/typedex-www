@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ProfileMenu from './ProfileMenu';
 import { FaUser } from 'react-icons/fa'; // Importing a person icon from react-icons
+import { Link } from 'react-router-dom';
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -11,10 +12,15 @@ const HeaderContainer = styled.header`
   background-color: #f5f5f5;
 `;
 
-const Title = styled.h1`
-  font-size: 24px;
+const TitleLink = styled(Link)`
+  text-decoration: none;
   color: #333;
   margin: 0 auto;
+`;
+
+const Title = styled.h1`
+  font-size: 24px;
+  margin: 0;
 `;
 
 const ProfileIcon = styled.div`
@@ -41,7 +47,7 @@ function generateColor(username) {
   return `#${color}`;
 }
 
-const Header = ({ isLoggedIn, username, onLogout }) => {
+const Header = ({ isLoggedIn, username, onLogout, homeurl }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -54,7 +60,9 @@ const Header = ({ isLoggedIn, username, onLogout }) => {
 
   return (
     <HeaderContainer>
-      <Title>Typedex</Title> {/* Adding the Typedex title */}
+      <TitleLink to={homeurl}>
+        <Title>Typedex</Title> {/* The title now links to the home route */}
+      </TitleLink> 
       <ProfileIcon onClick={toggleMenu} username={username}>
         {isLoggedIn ? username[0].toUpperCase() : <FaUser />} {/* Display username initial or person icon */}
         {menuOpen && (

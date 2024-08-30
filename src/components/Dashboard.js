@@ -16,7 +16,7 @@ const ContentContainer = styled.div`
   flex-grow: 1;
 `;
 
-const Dashboard = () => {
+const Dashboard = ({homeurl}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
 
@@ -39,7 +39,7 @@ const Dashboard = () => {
 
   return (
     <DashboardContainer>
-      <Header isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}/>
+      <Header isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} homeurl={homeurl}/>
       <ContentContainer>
         {/* <Sidebar /> */}
         <div style={{ flexGrow: 1, padding: '20px', backgroundColor: '#fafafa' }}>

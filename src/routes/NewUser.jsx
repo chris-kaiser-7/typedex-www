@@ -107,15 +107,6 @@ const NewUserForm = ({ navigateTo }) => {
       <Title>Create New User</Title>
       <Form onSubmit={handleSubmit}>
         <FormGroup>
-          <Label>Username:</Label>
-          <Input 
-            type="text" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} 
-            required 
-          />
-        </FormGroup>
-        <FormGroup>
           <Label>Email:</Label>
           <Input 
             type="email" 

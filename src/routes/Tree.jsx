@@ -219,17 +219,17 @@ function Tree() {
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:8000/api/v1/subtypes/')
+      .get('http://127.0.0.1:8000/api/v1/subtype/')
       .then((response) => {
         setNodes(response.data);
-        setRootNodes(response.data.filter((node) => !response.data.some((n) => n.children.includes(node.type))));
+        setRootNodes(response.data.filter((node) => !response.data.some((n) => n.children.includes(node.name))));
       })
       .catch((error) => console.error(error));
   }, []);
 
   const generateChildren = () => {
     axios
-      .get('http://127.0.0.1:8000/api/v1/subtypes/')
+      .get('http://127.0.0.1:8000/api/v1/subtype/')
       .then((response) => {
         setNodes(response.data);
       })
@@ -270,15 +270,15 @@ function Tree() {
       <StyledSelect value={selectedRoot} onChange={(e) => setSelectedRoot(e.target.value)}>
         <option value="">Select a root node</option>
         {rootNodes.map((node) => (
-          <option key={node.type} value={node.type}>
-            {node.type}
+          <option key={node.name} value={node.name}>
+            {node.name}
           </option>
         ))}
       </StyledSelect>
       <StyledCanvas ref={canvasRef} width="1000" height="800" />
       {selectedRoot && (
         <Node
-          node={nodes.find((node) => node.type === selectedRoot)}
+          node={nodes.find((node) => node.name === selectedRoot)}
           nodes={nodes}
           level={0}
           x={50}
@@ -294,7 +294,7 @@ function Tree() {
       {showModal && selectedNode && (
         <ModalOverlay onClick={closeModal}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
-            <h3>{selectedNode.type} Details</h3>
+            <h3>{selectedNode.name} Details</h3>
             <p>{selectedNode.general_description}</p>
             <input type="text" placeholder="Additional Field 1" />
             <input type="text" placeholder="Additional Field 2" />
