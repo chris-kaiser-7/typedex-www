@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { Container, Title, Input, Select, Table, Th, Td, Button, TemplateField } from '../styles/book_5';
+import { apiBook } from '../api/book';
+import { apiAssistant } from '../api/assistants';
 
 // // Styled Components
 // const Container = styled.div`
@@ -105,8 +107,8 @@ const BookForm = () => {
   useEffect(() => {
     const fetchAssistants = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/v1/assistants');
-        setAssistants(response.data);
+        const response = await apiAssistant.getAllAssistants()
+        setAssistants(response);
       } catch (error) {
         console.error('Error fetching assistants:', error);
       }
@@ -152,7 +154,7 @@ const BookForm = () => {
     };
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/v1/books', data);
+      const response = await apiBook.postBook(localStorage.getItem("token"), data)
       console.log('Book posted successfully:', response.data);
       // Reset form
       setName('');

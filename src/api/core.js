@@ -8,3 +8,14 @@ export const apiCore = {
     };
   },
 };
+
+export const jsonify = async (response) => {
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw {
+      message: `Request failed with ${response.status}: ${response.statusText}`,
+      code: response.status,
+    };
+  }
+};

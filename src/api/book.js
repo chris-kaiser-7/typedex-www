@@ -1,19 +1,23 @@
-
 import axios from 'axios';
-import { apiCore } from "./core";
+import { apiCore, jsonify } from "./core";
 
-const reducer = (acc, item) => {
-  const { name, ...rest } = item;
-  acc[name] = rest; 
-  return acc;
-};
-
-export const getAllBooks = async () => {
-  try {
-    const response = await axios.get(`${apiCore.url}/books`);
-    return response.data.reduce(reducer, {});
-  } catch (error) {
-    console.error('Failed to fetch books:', error);
-    throw error;
+export const apiBook = {
+  async getAllBooks(){
+    try {
+      const response = await axios.get(`${apiCore.url}/books`);
+      // return response.data.reduce(reducer, {});
+      return response.data
+    } catch (error) {
+      console.error('Failed to fetch books:', error);
+      throw error;
+    }
+  },
+  async postBook(token, data){
+    const res = await fetch(`${apiCore.url}/books`, {
+      method: "POST",
+      headers: apiCore.headers(token),
+      body: JSON.stringify(data)
+    });
+    return jsonify(res)
   }
-};
+}

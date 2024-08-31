@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { generateChildrenNodes, apiSubtype, getAllNodes } from '../api/subtype';
+import { apiSubtype } from '../api/subtype';
+import { useNavigate } from 'react-router-dom';
 
 const NodeContainer = styled.div`
   position: absolute;
@@ -314,21 +315,22 @@ function Tree() {
   const [showModal, setShowModal] = useState(false);
   const [selectedNode, setSelectedNode] = useState(null);
   const canvasRef = useRef(null);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
-    getAllNodes()
+    apiSubtype.getAllSubtypes()
       .then((response) => {
-        setNodes(response.data);
-        setRootNodes(response.data.filter(node => node.parent == null));
+        setNodes(response);
+        setRootNodes(response.filter(node => node.parent == null));
       })
       .catch((error) => console.error(error));
   }, []);
 
   const generateChildren = () => {
-    generateChildrenNodes()
+    apiSubtype.getAllSubtypes()
       .then((response) => {
-        setNodes(response.data);
+        setNodes(response);
       })
       .catch((error) => console.error(error));
   };
@@ -360,8 +362,13 @@ function Tree() {
     setSelectedNode(null);
   };
 
+  const handleOnNewRoot = () => {
+    navigate("/new-root");
+  }
+
   return (
     <TreeContainer>
+      <button onClick={handleOnNewRoot}>Add new root</button>
       <StyledSelect value={selectedRoot} onChange={(e) => setSelectedRoot(e.target.value)}>
         <option value="">Select a root node</option>
         {rootNodes.map((node) => (
