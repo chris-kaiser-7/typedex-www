@@ -23,10 +23,10 @@ FROM nginx:stable-alpine
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Copy the default nginx.conf provided by Nginx
-# COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # Expose the port on which the application will run
-EXPOSE 80
+EXPOSE 80/tcp
 
 # Start the Nginx server
 CMD ["nginx", "-g", "daemon off;"]
